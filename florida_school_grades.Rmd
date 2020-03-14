@@ -14,12 +14,13 @@ library(plotly)
 library(httr)
 library(readxl)
 library(janitor)
+library(maps)
 
 ```
 
 
 
-```{r district_grades}
+```{r district_grades, include=FALSE}
 
 url_district <- ("http://www.fldoe.org/core/fileparse.php/18534/urlt/DistrictGrades19.xls")
 
@@ -28,17 +29,18 @@ httr::GET(url_district, write_disk(grades_d <- tempfile(fileext = ".xls")))
 
 district_grades <- read_excel(grades_d, skip =1)
 
+district_grades <- janitor::clean_names(district_grades)
 
 
 ```
 
 
-```{r}
+```{r get_school_data, include=FALSE}
 
 url_school  <- ("http://www.fldoe.org/core/fileparse.php/18534/urlt/SchoolGrades19.xls")
 
 
-httr::GET(url, write_disk(grades_s <- tempfile(fileext = ".xls")))
+httr::GET(url_school, write_disk(grades_s <- tempfile(fileext = ".xls")))
 
 
 school_grades <- read_excel(grades_s, skip =4)
@@ -50,14 +52,93 @@ school_grades <- janitor::clean_names(school_grades)
 
 
 
+```{r florida_base, include=FALSE}
+
+states <- map_data("state")
+
+
+# Get Florida
+fl_df <- subset(states, region == "florida")
+
+# Get Florida county and change name to district name to match district grade key column
+counties <- map_data("county")
+fl_county <- subset(counties, region == "florida") %>%
+  rename("district_name" = "subregion")
+
+# Get Florida object
+fl_base <- ggplot(data = fl_df, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+  geom_polygon(color = "black", fill = "gray")
+
+
+fl_base + theme_nothing() + 
+  geom_polygon(data = fl_county, fill = NA, color = "white") +
+  geom_polygon(color = "black", fill = NA)  # get the state border back on top
+
+
+```
+
+
+```{r data_for_map}
+
+# Change District Case and Names to match Florida Counties 
+district_grades$district_name <- tolower(district_grades$district_name)
+
+district_grades$district_name <- gsub("miami-miami-dade", "miami-dade", fixed = TRUE, district_grades$district_name)
+
+district_grades$district_name <- gsub("desoto", "de soto", fixed = TRUE, district_grades$district_name)
+
+district_grades$district_name <- gsub("st. johns", "st johns", fixed = TRUE, district_grades$district_name)
+
+district_grades$district_name <- gsub("st. lucie", "st lucie", fixed = TRUE, district_grades$district_name)
+
+
+# Create Map Grades 
+map_district_grades <- inner_join(fl_county, district_grades, by = "district_name")
+
+
+```
+
+
+```{r create_theme }
+ditch_the_axes <- theme(
+  axis.text = element_blank(),
+  axis.line = element_blank(),
+  axis.ticks = element_blank(),
+  panel.border = element_blank(),
+  panel.grid = element_blank(),
+  axis.title = element_blank()
+)
+```
+
+
+```{r create_map}
+map_fl_school_grades <- fl_base + 
+  geom_polygon(data = map_district_grades, aes(fill = percent_of_total_possible_points, label = district_name, label2 = grade_2019), color = "white") +
+  geom_polygon(color = "black", fill = NA) +
+  theme_bw() +
+  ditch_the_axes
+
+
+
+ p <- plotly::ggplotly(map_fl_school_grades)
+ 
+```
+
+
+
+
+
+
+
 
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### Mapped Florida School District Grades
 
 ```{r}
-
+p
 ```
 
 Column {data-width=350}
