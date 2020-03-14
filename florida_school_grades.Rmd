@@ -29,7 +29,9 @@ httr::GET(url_district, write_disk(grades_d <- tempfile(fileext = ".xls")))
 
 district_grades <- read_excel(grades_d, skip =1)
 
-district_grades <- janitor::clean_names(district_grades)
+district_grades <- janitor::clean_names(district_grades) %>%
+  dplyr::rename(percent_points = percent_of_total_possible_points)
+
 
 
 ```
@@ -94,9 +96,7 @@ district_grades$district_name <- gsub("st. lucie", "st lucie", fixed = TRUE, dis
 
 
 # Create Map Grades 
-map_district_grades <- inner_join(fl_county, district_grades, by = "district_name")
-
-
+map_district_grades <- inner_join(fl_county, district_grades, by = "district_name") 
 ```
 
 
@@ -114,7 +114,7 @@ ditch_the_axes <- theme(
 
 ```{r create_map}
 map_fl_school_grades <- fl_base + 
-  geom_polygon(data = map_district_grades, aes(fill = percent_of_total_possible_points, label = district_name, label2 = grade_2019), color = "white") +
+  geom_polygon(data = map_district_grades, aes(fill = percent_points, label = district_name, label2 = grade_2019), color = "white") +
   geom_polygon(color = "black", fill = NA) +
   theme_bw() +
   ditch_the_axes
@@ -144,15 +144,11 @@ p
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### Data Table
 
 ```{r}
-
+DT::datatable(district_grades[,c(2,16,18)], rownames = FALSE)
 ```
 
-### Chart C
 
-```{r}
-
-```
 
