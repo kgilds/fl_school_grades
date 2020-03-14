@@ -11,7 +11,45 @@ library(flexdashboard)
 library(tidyverse)
 library(ggmap)
 library(plotly)
+library(httr)
+library(readxl)
+library(janitor)
+
 ```
+
+
+
+```{r district_grades}
+
+url_district <- ("http://www.fldoe.org/core/fileparse.php/18534/urlt/DistrictGrades19.xls")
+
+
+httr::GET(url_district, write_disk(grades_d <- tempfile(fileext = ".xls")))
+
+district_grades <- read_excel(grades_d, skip =1)
+
+
+
+```
+
+
+```{r}
+
+url_school  <- ("http://www.fldoe.org/core/fileparse.php/18534/urlt/SchoolGrades19.xls")
+
+
+httr::GET(url, write_disk(grades_s <- tempfile(fileext = ".xls")))
+
+
+school_grades <- read_excel(grades_s, skip =4)
+
+school_grades <- janitor::clean_names(school_grades)
+
+
+```
+
+
+
 
 Column {data-width=650}
 -----------------------------------------------------------------------
