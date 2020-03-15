@@ -128,8 +128,8 @@ map_fl_school_grades <- fl_base +
 
 
 
-
-
+Home
+====================================================
 
 
 Column {data-width=650}
@@ -151,4 +151,6 @@ DT::datatable(district_grades[,c(2,16,18)], rownames = FALSE)
 ```
 
 
+# School Grades
 
+===================================================
