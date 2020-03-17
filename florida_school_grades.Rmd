@@ -4,6 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -15,6 +16,7 @@ library(httr)
 library(readxl)
 library(janitor)
 library(maps)
+library(shiny)
 
 ```
 
@@ -48,6 +50,26 @@ httr::GET(url_school, write_disk(grades_s <- tempfile(fileext = ".xls")))
 school_grades <- read_excel(grades_s, skip =4)
 
 school_grades <- janitor::clean_names(school_grades)
+
+
+school_grades <- school_grades %>%
+  dplyr::rename(alt_ese = alternative_ese_center_school) %>%
+  dplyr::rename(percent_minority = percent_of_minority_students) %>%
+  dplyr::rename(percent_econdis = percent_of_economically_disadvantaged_students)
+
+
+school_data <- shiny::reactive({
+  school_data <- if(any(input$district == "ALL")){
+    school_data <- (school_grades)
+  }else{
+    dplyr::filter(school_grades, district_name == input$district)
+  }
+    
+  
+})
+
+
+
 
 
 ```
@@ -151,6 +173,152 @@ DT::datatable(district_grades[,c(2,16,18)], rownames = FALSE)
 ```
 
 
-# School Grades
 
-===================================================
+
+```{r eval = FALSE}
+
+selectInput(inputId = "district",
+            label = "Select a School District",
+            choices = c(unique(as.character(school_grades$district_name)),
+                        "ALL"))
+
+
+```
+
+
+
+```{r eval=FALSE}
+
+checkboxGroupInput(inputId = "select_var", 
+                       label = "Select variables", 
+                       choices = names(school_data()),
+                       selected = names(school_data()))
+```
+
+
+
+
+School Grades
+====================================================
+
+
+Inputs {.sidebar}
+-------------------------------------
+
+```{r}
+selectInput(inputId = "district",
+            label = "Select a School District",
+            choices = c(unique(as.character(school_grades$district_name)),
+                        "ALL"))
+```
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### All School Grades
+
+```{r eval = FALSE}
+fillCol(height = 600, flex = c(NA, 1), 
+  
+    #checkboxGroupInput(inputId = "var", 
+                       #label = "Select variables", 
+                       #choices = names(school_data()),
+                       #selected = names(school_data())),  
+    selectInput(inputId = "district",
+            label = "Select a School District",
+            choices = c(unique(as.character(school_grades$district_name)),
+                        "ALL")),
+
+  DT:: DTOutput("school_tbl", input$var,height = "100%")
+)
+
+output$school_tbl <- DT::renderDT({
+  DT::datatable(school_data(), rownames = FALSE)})
+
+```
+
+
+
+```{r eval = FALSE}
+checkboxGroupInput(inputId = "var", 
+                       label = "Select variables", 
+                       choices = names(school_data()),
+                       selected = names(school_data()))
+
+
+checkboxGroupInput(inputId = "select_var", 
+                       label = "Select variables", 
+                       choices = names(df()),
+                       selected = names(df()))
+```
+
+
+
+```{r eval=TRUE}
+  
+
+DT::renderDT({
+  DT::datatable(school_data()[,c(4,20, 44:45,47:48)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+```
+
+
+### English Testing
+
+```{r}
+DT::renderDT({
+  DT::datatable(school_data()[,c(4:7)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 3,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+```
+
+### Math Testing
+
+```{r}
+DT::renderDT({
+  DT::datatable(school_data()[,c(4, 8:10)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 5,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+```
+
+
+### Science 
+
+```{r}
+DT::renderDT({
+  DT::datatable(school_data()[,c(4, 11)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+```
+
+### Social Studies
+
+```{r}
+DT::renderDT({
+  DT::datatable(school_data()[,c(4, 12)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+```
+
