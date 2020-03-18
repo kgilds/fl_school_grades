@@ -269,6 +269,61 @@ DT::renderDT({
 ```
 
 
+### Elementary Schools
+
+```{r}
+
+  DT::renderDT({
+    school_data <- school_data() %>%
+  dplyr:: filter(school_type == "01") 
+  DT::datatable(school_data[,c(4,20, 44:45,47:48)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+  
+```
+
+
+
+### Middle Schools 
+
+```{r}
+DT::renderDT({
+    school_data <- school_data() %>%
+  dplyr:: filter(school_type == "02") 
+  DT::datatable(school_data[,c(4,20, 44:45,47:48)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+  
+
+```
+
+
+### High School
+
+```{r}
+DT::renderDT({
+    school_data <- school_data() %>%
+  dplyr:: filter(school_type == "03") 
+  DT::datatable(school_data[,c(4,20, 44:45,47:48)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+  
+```
+
+
+
 ### English Testing
 
 ```{r}
