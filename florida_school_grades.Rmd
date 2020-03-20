@@ -47,9 +47,9 @@ url_school  <- ("http://www.fldoe.org/core/fileparse.php/18534/urlt/SchoolGrades
 httr::GET(url_school, write_disk(grades_s <- tempfile(fileext = ".xls")))
 
 
-school_grades <- read_excel(grades_s, skip =4)
+school_grades_org <- read_excel(grades_s, skip =4)
 
-school_grades <- janitor::clean_names(school_grades)
+school_grades <- janitor::clean_names(school_grades_org)
 
 
 school_grades <- school_grades %>%
@@ -220,6 +220,8 @@ selectInput(inputId = "district",
             choices = c(unique(as.character(school_grades$district_name)),
                         "ALL"))
 ```
+
+
 
 
 Column {.tabset}
@@ -409,7 +411,7 @@ Column {.tabset}
 
 ```{r}
 DT::renderDT({
-  DT::datatable(grade_history()[,c(4,24,20:23)],  rownames = FALSE,
+  DT::datatable(grade_history()[,c(4,24,23:20)],  rownames = FALSE,
                extensions = "Buttons",
                   options = list(
                     columnDefs = list(list(className = 'dt-right')),
@@ -462,9 +464,65 @@ DT::renderDT({
 About
 ================================================
 
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### About the Application 
 ```{r}
 includeMarkdown("About.md")
+
+
+
+
+
+```
+
+Column {data-width=300}
+---------------------------------------------------------
+### Download School Grade Data
+
+```{r eval=TRUE}
+downloadLink("downloadData", "Download School Grades Data")
+
+
+
+  
+
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("school-grades-", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(school_data(), file)
+    }
+  )
+  
+  
+  
+  
 ```
 
 
+-------------------------------------------
+### Download District Grade Data
+
+```{r}
+downloadLink("downloadData_district", "Download District Grades Data")
+
+
+
+  
+
+  output$downloadData_district <- downloadHandler(
+    filename = function() {
+      paste("district-grades-", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(district_grades, file)
+    }
+  )
+  
+
+```
 
