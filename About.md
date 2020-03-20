@@ -1,4 +1,4 @@
-### Goals
+### Goals:
 
 To demonstrate how to use Shiny & Rmarkdown to make large spreadsheets files interactive and easier to manage.    
 
