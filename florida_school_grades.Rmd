@@ -55,7 +55,9 @@ school_grades <- janitor::clean_names(school_grades)
 school_grades <- school_grades %>%
   dplyr::rename(alt_ese = alternative_ese_center_school) %>%
   dplyr::rename(percent_minority = percent_of_minority_students) %>%
-  dplyr::rename(percent_econdis = percent_of_economically_disadvantaged_students)
+  dplyr::rename(percent_econdis = percent_of_economically_disadvantaged_students) %>%dplyr::rename(english_achivement = english_language_arts_achievement) %>%
+  dplyr::rename(english_gains = english_language_arts_learning_gains) %>%
+  dplyr::rename(english_learning_gains_lowest_25 = english_language_arts_learning_gains_of_the_lowest_25_percent )
 
 
 school_data <- shiny::reactive({
@@ -175,6 +177,7 @@ Column {data-width=350}
 ### Data Table
 
 ```{r}
+district_grades$district_name <- toupper(district_grades$district_name)
 DT::datatable(district_grades[,c(2,16,18)], rownames = FALSE)
 ```
 
