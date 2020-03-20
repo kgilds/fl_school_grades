@@ -69,7 +69,13 @@ school_data <- shiny::reactive({
 })
 
 
-
+grade_history <- shiny::reactive({
+  grade_history <- if(any(input$district_h == "ALL")){
+  grade_history <- (school_grades)
+}else{
+    dplyr::filter(school_grades, district_name == input$district_h)
+  }
+})
 
 
 ```
@@ -306,7 +312,7 @@ DT::renderDT({
 ```
 
 
-### High School
+### High Schools
 
 ```{r}
 DT::renderDT({
@@ -375,6 +381,86 @@ DT::renderDT({
                     pageLength = 10,
                     dom = 'lftripB',
                     buttons = c('copy', 'print', 'csv')))})
+```
+
+
+Grade History
+============================================
+
+
+Inputs {.sidebar}
+-------------------------------------
+
+```{r}
+selectInput(inputId = "district_h",
+            label = "Select a School District",
+            choices = c(unique(as.character(school_grades$district_name)),
+                        "ALL"))
+```
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### 2015-2019
+
+```{r}
+DT::renderDT({
+  DT::datatable(grade_history()[,c(4,24,20:23)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+```
+
+
+### 2010-2014
+
+```{r}
+DT::renderDT({
+  DT::datatable(grade_history()[,c(4,29:25)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+
+```
+
+### 2005-2009
+
+```{r}
+DT::renderDT({
+  DT::datatable(grade_history()[,c(4,34:30)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+```
+
+### 1999-2004
+
+```{r}
+DT::renderDT({
+  DT::datatable(grade_history()[,c(4,40:35)],  rownames = FALSE,
+               extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-right')),
+                    pageLength = 10,
+                    dom = 'lftripB',
+                    buttons = c('copy', 'print', 'csv')))})
+```
+
+About
+================================================
+
+```{r}
+includeMarkdown("About.md")
 ```
 
 
