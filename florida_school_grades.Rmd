@@ -197,13 +197,11 @@ selectInput(inputId = "district",
 
 
 ```{r eval=FALSE}
-
 checkboxGroupInput(inputId = "select_var", 
                        label = "Select variables", 
                        choices = names(school_data()),
                        selected = names(school_data()))
 ```
-
 
 
 
@@ -221,6 +219,31 @@ selectInput(inputId = "district",
                         "ALL"))
 ```
 
+```{r}
+output$plot <- renderPlotly({
+  
+  school_data() %>%
+		ggplot2::ggplot(.,aes(x = grade_2019, y = ..prop.., group =2)) +
+		ggplot2::geom_bar(stat = "count", width = .5, fill = "steelblue") +
+		#ggplot2::labs(title = {{title}}) +
+		#ggplot2::labs(caption = {{caption}}) +
+		ggplot2::ylab("Percent") +
+    ggplot2::coord_flip() +
+		ggplot2::scale_y_continuous(labels = scales:: percent) +
+		geom_text(aes(label = scales::percent(..prop..),
+					  y = ..prop..), stat = "count", vjust = 1.6, color = "black",
+				  size= 4, nudge_y = .05) +
+		theme_gray() +
+		theme(panel.grid.major.x = element_blank(),
+			  panel.grid.minor.x = element_blank(),
+			  panel.grid.major.y = element_blank(),
+			  panel.grid.minor.y = element_blank(),
+		)
+ggplotly()
+})
+
+plotly::plotlyOutput("plot")
+```
 
 
 
