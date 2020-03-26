@@ -167,7 +167,7 @@ Column {data-width=650}
 
 ### Mapped Florida School District Grades
 
-```{r}
+```{r display_map}
 p
 ```
 
@@ -176,32 +176,13 @@ Column {data-width=350}
 
 ### Data Table
 
-```{r}
+```{r display_dt}
 district_grades$district_name <- toupper(district_grades$district_name)
 DT::datatable(district_grades[,c(2,16,18)], rownames = FALSE)
 ```
 
 
 
-
-```{r eval = FALSE}
-
-selectInput(inputId = "district",
-            label = "Select a School District",
-            choices = c(unique(as.character(school_grades$district_name)),
-                        "ALL"))
-
-
-```
-
-
-
-```{r eval=FALSE}
-checkboxGroupInput(inputId = "select_var", 
-                       label = "Select variables", 
-                       choices = names(school_data()),
-                       selected = names(school_data()))
-```
 
 
 
@@ -212,14 +193,14 @@ School Grades
 Inputs {.sidebar}
 -------------------------------------
 
-```{r}
+```{r district_input}
 selectInput(inputId = "district",
             label = "Select a School District",
             choices = c(unique(as.character(school_grades$district_name)),
                         "ALL"))
 ```
 
-```{r}
+```{r display_plot_grades}
 output$plot <- renderPlotly({
   
   school_data() %>%
@@ -252,44 +233,9 @@ Column {.tabset}
 
 ### All School Grades
 
-```{r eval = FALSE}
-fillCol(height = 600, flex = c(NA, 1), 
-  
-    #checkboxGroupInput(inputId = "var", 
-                       #label = "Select variables", 
-                       #choices = names(school_data()),
-                       #selected = names(school_data())),  
-    selectInput(inputId = "district",
-            label = "Select a School District",
-            choices = c(unique(as.character(school_grades$district_name)),
-                        "ALL")),
-
-  DT:: DTOutput("school_tbl", input$var,height = "100%")
-)
-
-output$school_tbl <- DT::renderDT({
-  DT::datatable(school_data(), rownames = FALSE)})
-
-```
 
 
-
-```{r eval = FALSE}
-checkboxGroupInput(inputId = "var", 
-                       label = "Select variables", 
-                       choices = names(school_data()),
-                       selected = names(school_data()))
-
-
-checkboxGroupInput(inputId = "select_var", 
-                       label = "Select variables", 
-                       choices = names(df()),
-                       selected = names(df()))
-```
-
-
-
-```{r eval=TRUE}
+```{r all_schools, eval=TRUE}
   
 
 DT::renderDT({
@@ -305,7 +251,7 @@ DT::renderDT({
 
 ### Elementary Schools
 
-```{r}
+```{r elem_schools}
 
   DT::renderDT({
     school_data <- school_data() %>%
@@ -324,7 +270,7 @@ DT::renderDT({
 
 ### Middle Schools 
 
-```{r}
+```{r middle_schools}
 DT::renderDT({
     school_data <- school_data() %>%
   dplyr:: filter(school_type == "02") 
@@ -342,7 +288,7 @@ DT::renderDT({
 
 ### High Schools
 
-```{r}
+```{r high_schools}
 DT::renderDT({
     school_data <- school_data() %>%
   dplyr:: filter(school_type == "03") 
@@ -360,7 +306,7 @@ DT::renderDT({
 
 ### English Testing
 
-```{r}
+```{r english_testing}
 DT::renderDT({
   DT::datatable(school_data()[,c(4:7)],  rownames = FALSE,
                extensions = "Buttons",
@@ -373,7 +319,7 @@ DT::renderDT({
 
 ### Math Testing
 
-```{r}
+```{r math_testing}
 DT::renderDT({
   DT::datatable(school_data()[,c(4, 8:10)],  rownames = FALSE,
                extensions = "Buttons",
@@ -387,7 +333,7 @@ DT::renderDT({
 
 ### Science 
 
-```{r}
+```{r science_testing}
 DT::renderDT({
   DT::datatable(school_data()[,c(4, 11)],  rownames = FALSE,
                extensions = "Buttons",
@@ -400,7 +346,7 @@ DT::renderDT({
 
 ### Social Studies
 
-```{r}
+```{r social_studies}
 DT::renderDT({
   DT::datatable(school_data()[,c(4, 12)],  rownames = FALSE,
                extensions = "Buttons",
@@ -419,7 +365,7 @@ Grade History
 Inputs {.sidebar}
 -------------------------------------
 
-```{r}
+```{r district_input_2}
 selectInput(inputId = "district_h",
             label = "Select a School District",
             choices = c(unique(as.character(school_grades$district_name)),
@@ -432,7 +378,7 @@ Column {.tabset}
 
 ### 2015-2019
 
-```{r}
+```{r grade_2015}
 DT::renderDT({
   DT::datatable(grade_history()[,c(4,24,23:20)],  rownames = FALSE,
                extensions = "Buttons",
@@ -446,7 +392,7 @@ DT::renderDT({
 
 ### 2010-2014
 
-```{r}
+```{r grade_2010}
 DT::renderDT({
   DT::datatable(grade_history()[,c(4,29:25)],  rownames = FALSE,
                extensions = "Buttons",
@@ -460,7 +406,7 @@ DT::renderDT({
 
 ### 2005-2009
 
-```{r}
+```{r grade_2005}
 DT::renderDT({
   DT::datatable(grade_history()[,c(4,34:30)],  rownames = FALSE,
                extensions = "Buttons",
@@ -473,7 +419,7 @@ DT::renderDT({
 
 ### 1999-2004
 
-```{r}
+```{r grade_1999}
 DT::renderDT({
   DT::datatable(grade_history()[,c(4,40:35)],  rownames = FALSE,
                extensions = "Buttons",
@@ -492,7 +438,7 @@ Column {data-width=650}
 -----------------------------------------------------------------------
 
 ### About the Application 
-```{r}
+```{r about}
 includeMarkdown("About.md")
 
 
