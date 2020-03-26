@@ -3,6 +3,12 @@
 To demonstrate how to use Shiny & Rmarkdown to make large spreadsheets files interactive and easier to manage.    
 
 
+### Acknowledgements:
+
+I learned a ton on making maps from this tutorial by
+[Erick Andrews](de.github.io/rep-res-web/lectures/making-maps-with-R.html)
+
+
 ### Source:
 
 This application pulls district and school grades from spreadsheet files on the [Florida Department of Education Website](http://www.fldoe.org/accountability/accountability-reporting/school-grades/)
