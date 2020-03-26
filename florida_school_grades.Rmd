@@ -144,7 +144,7 @@ ditch_the_axes <- theme(
 
 ```{r create_map}
 map_fl_school_grades <- fl_base + 
-  geom_polygon(data = map_district_grades, aes(fill = percent_points, label = district_name, label2 = grade_2019), color = "white") +
+  geom_polygon(data = map_district_grades, aes(fill = percent_points, label = district_name, label2 = grade_2019, label3 = grade_2018, label4 = grade_2017), color = "white") +
   geom_polygon(color = "black", fill = NA) +
   theme_bw() +
   ditch_the_axes
@@ -225,8 +225,8 @@ output$plot <- renderPlotly({
   school_data() %>%
 		ggplot2::ggplot(.,aes(x = grade_2019, y = ..prop.., group =2)) +
 		ggplot2::geom_bar(stat = "count", width = .5, fill = "steelblue") +
-		#ggplot2::labs(title = {{title}}) +
-		#ggplot2::labs(caption = {{caption}}) +
+		ggplot2::labs(title = "School Grades" ) +
+		ggplot2::labs(caption = "source: FL Dept. of Education" ) +
 		ggplot2::ylab("Percent") +
     ggplot2::coord_flip() +
 		ggplot2::scale_y_continuous(labels = scales:: percent) +
