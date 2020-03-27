@@ -5,7 +5,7 @@ To demonstrate how to use Shiny & Rmarkdown to make large spreadsheets files int
 
 ### Acknowledgements:
 
-I learned a ton on making maps from this tutorial by
+Map making skills and code was take  from this tutorial by
 [Erick Andrews](de.github.io/rep-res-web/lectures/making-maps-with-R.html)
 
 
