@@ -169,6 +169,8 @@ Column {data-width=650}
 
 ```{r display_map}
 p
+
+
 ```
 
 Column {data-width=350}
@@ -186,6 +188,7 @@ DT::datatable(district_grades[,c(2,16,18)], rownames = FALSE)
 
 
 
+
 School Grades
 ====================================================
 
@@ -197,7 +200,8 @@ Inputs {.sidebar}
 selectInput(inputId = "district",
             label = "Select a School District",
             choices = c(unique(as.character(school_grades$district_name)),
-                        "ALL"))
+                        "ALL"), 
+            selected = "ALL")
 ```
 
 ```{r display_plot_grades}
@@ -226,6 +230,11 @@ ggplotly()
 plotly::plotlyOutput("plot")
 ```
 
+<br>
+```{r}
+downloadLink("downloadData", "Download School Grades Data")
+
+```
 
 
 Column {.tabset}
@@ -447,40 +456,18 @@ includeMarkdown("About.md")
 
 ```
 
-Column {data-width=300}
----------------------------------------------------------
-### Download School Grade Data
 
-```{r eval=TRUE}
-downloadLink("downloadData", "Download School Grades Data")
+```{r}
 
 
-
-  
-
-  output$downloadData <- downloadHandler(
+ output$downloadData <- downloadHandler(
     filename = function() {
       paste("school-grades-", Sys.Date(), ".csv", sep="")
     },
     content = function(file) {
-      write.csv(school_data(), file)
+      write.csv(school_grades_org, file)
     }
   )
-  
-  
-  
-  
-```
-
-
--------------------------------------------
-### Download District Grade Data
-
-```{r}
-downloadLink("downloadData_district", "Download District Grades Data")
-
-
-
   
 
   output$downloadData_district <- downloadHandler(
@@ -491,6 +478,10 @@ downloadLink("downloadData_district", "Download District Grades Data")
       write.csv(district_grades, file)
     }
   )
+  
+  
+  
+  
   
 
 ```
