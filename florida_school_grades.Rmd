@@ -9,7 +9,7 @@ runtime: shiny
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-library(tidyverse)
+library(dplyr)
 library(ggmap)
 library(plotly)
 library(httr)
